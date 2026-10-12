@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PITCH_TITLE}} - Simulador de Práctica y Ensayo</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel-bg: #1e293b;
+      --card-bg: #ffffff;
+      --text-main: #f8fafc;
+      --text-dark: #0f172a;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --border-light: #e2e8f0;
+      --accent: {{PRIMARY_COLOR}};
+      --accent-soft: rgba(201, 75, 34, 0.15);
+      --amber: #ea9b27;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* BARRA SUPERIOR DE CONTROL */
+    header {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: nowrap;
+      z-index: 50;
+    }
+    .header-left { display: flex; align-items: center; gap: 0.75rem; }
+    .project-title { font-weight: 800; font-size: 1.15rem; color: #fff; letter-spacing: -0.02em; }
+    .badge {
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .badge.highlight { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .badge.mode { background: #0284c7; color: #fff; border-color: #0369a1; }
+
+    /* CRONÓMETRO Y CONTROLES */
+    .controls { display: flex; align-items: center; gap: 0.75rem; }
+    .timer-val { font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; color: #fff; }
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .btn-secondary { background: #334155; color: #f8fafc; }
+    .btn-secondary:hover { background: #475569; }
+
+    /* CONTENEDOR PRINCIPAL: VISTA DIVIDIDA (GUION IZQUIERDA / DIAPOS DERECHA) */
+    .main-workspace {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      flex: 1;
+      height: calc(100vh - 58px);
+      overflow: hidden;
+      transition: grid-template-columns 0.25s ease;
+    }
+    .main-workspace.expanded-slides {
+      grid-template-columns: 0px 1fr;
+    }
+
+    /* PANEL IZQUIERDO: GUION Y ACOTACIONES POR SLIDE */
+    .script-pane {
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .main-workspace.expanded-slides .script-pane { display: none; }
+
+    .cue-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .cue-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .cue-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+    }
+    .cue-item { background: #1e293b; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #334155; }
+    .cue-item strong { color: #f8fafc; display: block; font-size: 0.75rem; margin-bottom: 2px; }
+
+    .speech-box {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 10px;
+      padding: 1.25rem;
+      border-left: 5px solid var(--accent);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .speech-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .speech-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--accent); }
+    .speech-time-target { font-size: 0.8rem; font-weight: 700; color: #64748b; }
+    .speech-text-body { font-size: 1.15rem; line-height: 1.6; font-weight: 500; color: #1e293b; }
+    .speech-bridge-highlight {
+      background: #fefce8;
+      border: 1px solid #fef08a;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: #854d0e;
+      margin: 0.75rem 0;
+      font-weight: 600;
+    }
+
+    /* PANEL DERECHO: VISOR DE DIAPOSITIVAS */
+    .slide-viewer-pane {
+      background: #090d16;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .slide-stage-container {
+      width: 100%;
+      max-width: 960px;
+      aspect-ratio: var(--aspect-ratio, 16/9);
+      background: #1a1613;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      border: 1px solid #292524;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2.2rem 2.5rem 1.2rem;
+      position: relative;
+      transition: all 0.2s ease;
+      overflow: hidden;
+    }
+    .slide-stage-container.light-theme {
+      background: #f8f5ee;
+      border-color: #e7e5e4;
+      color: #1c1917;
+    }
+    .slide-top-meta { display: flex; justify-content: space-between; align-items: center; }
+    .slide-category { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--amber); }
+    .slide-stage-container.light-theme .slide-category { color: var(--accent); }
+    .slide-logos { display: flex; gap: 0.6rem; align-items: center; }
+    .slide-logo-img { height: 38px; width: auto; object-fit: contain; }
+
+    .slide-center-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 1rem 0; }
+    .slide-h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.15; color: #fff; margin-bottom: 0.6rem; }
+    .slide-stage-container.light-theme .slide-h1 { color: #1c1917; }
+    .slide-h2 { font-size: 1.15rem; color: #d6d3d1; line-height: 1.4; }
+    .slide-stage-container.light-theme .slide-h2 { color: #57534e; }
+    .slide-bullets { list-style: none; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .slide-bullet-item {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #f1f5f9;
+    }
+    .slide-stage-container.light-theme .slide-bullet-item {
+      background: #ffffff;
+      border-color: #e7e5e4;
+      color: #292524;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    /* BARRA DE PROGRESO INFERIOR CON AVATAR CAMINANTE */
+    .slide-nav-bar {
+      margin-top: auto;
+      position: relative;
+      padding-top: 24px;
+    }
+    .progress-segments-track {
+      display: flex;
+      gap: 3px;
+      width: calc(100% - 60px);
+      height: 4px;
+      background: transparent;
+      position: relative;
+    }
+    .p-segment {
+      flex: 1;
+      height: 100%;
+      border-radius: 2px;
+      background: #3a332c;
+      transition: background 0.2s ease;
+    }
+    .slide-stage-container.light-theme .p-segment { background: #e7dcc8; }
+    .p-segment.active { background: var(--amber); }
+    .slide-stage-container.light-theme .p-segment.active { background: var(--accent); }
+
+    .walking-avatar-img {
+      position: absolute;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      transform: translateX(-50%);
+      transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .slide-counter-tag {
+      position: absolute;
+      right: 0;
+      bottom: -4px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #a8a29e;
+    }
+
+    /* NAVEGADOR DE SLIDES */
+    .slide-nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .nav-btn {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .nav-btn:hover { background: #334155; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="project-title">{{PITCH_TITLE}}</div>
+      <span class="badge highlight">{{PITCH_DURATION_LABEL}}</span>
+      <span class="badge mode">MODALIDAD: {{PRESENTATION_MODE}}</span>
+      <span class="badge">ASPECTO: {{ASPECT_RATIO}}</span>
+    </div>
+    <div class="controls">
+      <div class="timer-val" id="timer">03:00</div>
+      <button class="btn" id="startBtn" onclick="toggleTimer()">▶ Iniciar</button>
+      <button class="btn btn-secondary" onclick="resetTimer()">↺ Reiniciar</button>
+      <button class="btn btn-secondary" id="toggleExpandBtn" onclick="toggleExpand()">⛶ Agrandar Diapos</button>
+    </div>
+  </header>
+
+  <div class="main-workspace" id="workspace">
+    <!-- PANEL IZQUIERDO: GUION Y ACOTACIONES DE ESTA DIAPOSITIVA -->
+    <div class="script-pane">
+      <div class="cue-card">
+        <div class="cue-title">Indicaciones Escénicas (Modalidad {{PRESENTATION_MODE}})</div>
+        <div class="cue-grid">
+          <div class="cue-item">
+            <strong>Tono & Ritmo:</strong>
+            <span id="cueTone">Convicción y energía</span>
+          </div>
+          <div class="cue-item">
+            <strong>Foco de Mirada:</strong>
+            <span id="cueGaze">{{GAZE_MODE_DEFAULT}}</span>
+          </div>
+          <div class="cue-item">
+            <strong>Corporalidad / Manos:</strong>
+            <span id="cueHands">Palmas abiertas, postura erguida</span>
+          </div>
+          <div class="cue-item">
+            <strong>Pausas & Respiración:</strong>
+            <span id="cuePause">Pausa de 1.5s tras dato clave</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="speech-box">
+        <div class="speech-header">
+          <div class="speech-label" id="speechLabel">Guion Verbatim · Slide 1</div>
+          <div class="speech-time-target" id="speechTargetTime">~30 seg</div>
+        </div>
+        <div id="speechBridgeContainer"></div>
+        <div class="speech-text-body" id="speechText">
+          Cargando guion...
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL DERECHO: DIAPOSITIVA ACTUAL -->
+    <div class="slide-viewer-pane">
+      <div class="slide-stage-container" id="slideStage" style="--aspect-ratio: {{ASPECT_RATIO_CSS}};">
+        <div class="slide-top-meta">
+          <div class="slide-category" id="slideCategory">PORTADA</div>
+          <div class="slide-logos" id="slideLogos">
+            {{LOGOS_HTML}}
+          </div>
+        </div>
+
+        <div class="slide-center-content" id="slideContent">
+          <div class="slide-h1" id="slideTitle">Cargando...</div>
+          <div class="slide-h2" id="slideSubtitle">...</div>
+          <div class="slide-bullets" id="slideBullets"></div>
+        </div>
+
+        <div class="slide-nav-bar">
+          <img src="{{AVATAR_PATH}}" class="walking-avatar-img" id="walkingAvatar" alt="Avatar">
+          <div class="progress-segments-track" id="progressTrack"></div>
+          <div class="slide-counter-tag" id="slideCounter">1 / 1</div>
+        </div>
+      </div>
+
+      <div class="slide-nav-controls">
+        <button class="nav-btn" onclick="prevSlide()">◀ Anterior</button>
+        <span style="font-size: 0.85rem; color: #94a3b8; font-weight: 600;" id="navIndicator">Diapositiva 1 de 1</span>
+        <button class="nav-btn" onclick="nextSlide()">Siguiente ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slidesData = {{SLIDES_JSON_DATA}};
+    let currentIdx = 0;
+    let totalSlides = slidesData.length;
+    let totalDuration = parseInt("{{PITCH_DURATION_SECONDS}}") || 180;
+    let timeLeft = totalDuration;
+    let timerId = null;
+    let isExpanded = false;
+
+    function renderSlide(idx) {
+      if (idx < 0 || idx >= totalSlides) return;
+      currentIdx = idx;
+      const s = slidesData[idx];
+
+      // Tema de fondo
+      const stage = document.getElementById('slideStage');
+      if (s.theme === 'light') {
+        stage.classList.add('light-theme');
+      } else {
+        stage.classList.remove('light-theme');
+      }
+
+      // Textos del slide
+      document.getElementById('slideCategory').innerText = s.category || s.type || 'DIAPOSITIVA';
+      document.getElementById('slideTitle').innerText = s.title || '';
+      document.getElementById('slideSubtitle').innerText = s.subtitle || '';
+
+      const bulletsContainer = document.getElementById('slideBullets');
+      bulletsContainer.innerHTML = '';
+      if (s.points && s.points.length > 0) {
+        s.points.forEach(pt => {
+          const div = document.createElement('div');
+          div.className = 'slide-bullet-item';
+          div.innerText = `• ${pt}`;
+          bulletsContainer.appendChild(div);
+        });
+      }
+
+      // Guion y acotaciones
+      document.getElementById('speechLabel').innerText = `Guion Verbatim · Slide ${idx + 1}`;
+      document.getElementById('speechTargetTime').innerText = s.target_time || '';
+      document.getElementById('speechText').innerText = s.speech || 'Continúa explicando con apoyo en la lámina.';
+
+      const bridgeBox = document.getElementById('speechBridgeContainer');
+      bridgeBox.innerHTML = '';
+      if (s.bridge) {
+        bridgeBox.innerHTML = `<div class="speech-bridge-highlight">🌉 <strong>EL PUENTE:</strong> ${s.bridge}</div>`;
+      }
+
+      document.getElementById('cueTone').innerText = s.tone || 'Seguridad y claridad';
+      document.getElementById('cueGaze').innerText = s.gaze || 'Contacto visual directo';
+      document.getElementById('cueHands').innerText = s.hands || 'Manos en caja escénica';
+      document.getElementById('cuePause').innerText = s.pause || 'Pausa de 1 segundo';
+
+      // Actualizar barra de navegación y avatar caminante
+      renderProgressBar(idx);
+      document.getElementById('navIndicator').innerText = `Diapositiva ${idx + 1} de ${totalSlides}`;
+      document.getElementById('slideCounter').innerText = `${idx + 1} / ${totalSlides}`;
+    }
+
+    function renderProgressBar(activeIdx) {
+      const track = document.getElementById('progressTrack');
+      track.innerHTML = '';
+      for (let i = 0; i < totalSlides; i++) {
+        const seg = document.createElement('div');
+        seg.className = `p-segment ${i <= activeIdx ? 'active' : ''}`;
+        track.appendChild(seg);
+      }
+
+      // Posicionar avatar exactamente sobre el segmento activo
+      const avatar = document.getElementById('walkingAvatar');
+      const pct = (activeIdx + 0.5) / totalSlides;
+      avatar.style.left = `calc(${pct * 100}% - ${pct * 60}px)`;
+    }
+
+    function prevSlide() {
+      if (currentIdx > 0) renderSlide(currentIdx - 1);
+    }
+
+    function nextSlide() {
+      if (currentIdx < totalSlides - 1) renderSlide(currentIdx + 1);
+    }
+
+    function toggleExpand() {
+      isExpanded = !isExpanded;
+      const ws = document.getElementById('workspace');
+      const btn = document.getElementById('toggleExpandBtn');
+      if (isExpanded) {
+        ws.classList.add('expanded-slides');
+        btn.innerText = "⛶ Mostrar Guion";
+      } else {
+        ws.classList.remove('expanded-slides');
+        btn.innerText = "⛶ Agrandar Diapos";
+      }
+    }
+
+    // Cronómetro
+    function toggleTimer() {
+      const btn = document.getElementById('startBtn');
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+        btn.innerText = "▶ Reanudar";
+      } else {
+        btn.innerText = "⏸ Pausar";
+        timerId = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timerId);
+            timerId = null;
+            btn.innerText = "✔ Fin";
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+      timeLeft = totalDuration;
+      updateTimerDisplay();
+      document.getElementById('startBtn').innerText = "▶ Iniciar";
+      document.getElementById('timer').style.color = "#fff";
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      const el = document.getElementById('timer');
+      el.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      if (timeLeft <= 10) el.style.color = "#ef4444";
+      else if (timeLeft <= 30) el.style.color = "#f97316";
+      else el.style.color = "#fff";
+    }
+
+    // Navegación con flechas del teclado
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      else if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    // Iniciar
+    updateTimerDisplay();
+    renderSlide(0);
+  </script>
+</body>
+</html>

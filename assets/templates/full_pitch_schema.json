@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "Nombre del Proyecto",
+    "subtitle": "One-liner claro y contundente",
+    "author": "Nombre del Expositor / Equipo",
+    "event": "Hackathon / Competencia",
+    "allocated_time_minutes": 3.0,
+    "communicator_style": "Cercano",
+    "contact_email": "contacto@proyecto.pe",
+    "contact_web": "proyecto.pe",
+    "contact_github": "github.com/equipo"
+  },
+  "settings": {
+    "aspect_ratio": "16:9",
+    "include_unp_logo": true,
+    "include_fii_logo": true,
+    "custom_avatar_path": null,
+    "qr_config": {
+      "enabled": true,
+      "primary": {
+        "payload": "https://proyecto.pe",
+        "label": "Demo en Vivo",
+        "description": "Escanea para probar"
+      }
+    }
+  },
+  "speech": {
+    "act1_opening": "Texto de apertura con gancho...",
+    "act1_bridge": "El puente que conecta el gancho con el dolor real...",
+    "act1_problem": "Cuantificación del dolor en el territorio...",
+    "act2_solution": "Presentación del producto, tecnología y validación empírica...",
+    "act3_closing": "Llamado a la acción, frase final esculpida y silencio de 2 segundos."
+  },
+  "slides": [
+    {
+      "type": "hero_dark",
+      "title": "Nombre del Proyecto",
+      "subtitle": "Propuesta de valor en una oración",
+      "author_line": "Expositor · UNP · Hackathon"
+    },
+    {
+      "type": "content_light",
+      "category": "EL PROBLEMA",
+      "title": "El dolor crítico no resuelto",
+      "points": [
+        "Punto crítico número 1 con datos concretos.",
+        "Pérdidas económicas o impacto directo en personas.",
+        "Ineficiencia de las alternativas actuales."
+      ]
+    },
+    {
+      "type": "act_divider_dark",
+      "act_number": "ACTO 2",
+      "title": "Nuestra Solución",
+      "description": "Tecnología diseñada para resolver el problema de raíz."
+    },
+    {
+      "type": "content_light",
+      "category": "INNOVACIÓN",
+      "title": "Cómo funciona el sistema",
+      "points": [
+        "Componente central y arquitectura.",
+        "Validación empírica con usuarios reales.",
+        "Modelo de negocio sostenible."
+      ]
+    },
+    {
+      "type": "video_slide",
+      "category": "DEMO EN VIVO",
+      "title": "Demostración de Funcionamiento",
+      "video_filename": "demo_prototipo.mp4"
+    },
+    {
+      "type": "closing_qr_dark",
+      "title": "¡Muchas Gracias!",
+      "subtitle": "El futuro de la innovación empieza hoy.",
+      "contact_lines": [
+        "proyecto.pe",
+        "github.com/equipo",
+        "contacto@proyecto.pe"
+      ]
+    }
+  ]
+}
