@@ -12,6 +12,7 @@ import os
 import sys
 import json
 import argparse
+import subprocess
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
@@ -27,6 +28,40 @@ try:
     import qrcode
 except ImportError:
     qrcode = None
+
+def extract_poster_frame(video_path: str, poster_path: str):
+    """Extrae un fotograma de portada del video usando FFmpeg."""
+    cmd = ["ffmpeg", "-y", "-ss", "0.5", "-i", video_path, "-frames:v", "1", poster_path]
+    try:
+        subprocess.run(cmd, check=True, capture_output=True)
+        return poster_path
+    except Exception:
+        try:
+            img = Image.new("RGB", (640, 360), (26, 22, 19))
+            img.save(poster_path)
+            return poster_path
+        except Exception:
+            return None
+
+def auto_generate_demo_clip(video_path: str, title: str, duration_sec: int = 15):
+    """Genera un clip de demostración sintético con FFmpeg si no existe video."""
+    os.makedirs(os.path.dirname(video_path) if os.path.dirname(video_path) else ".", exist_ok=True)
+    clean_title = title.replace("'", "").replace(":", " -")
+    cmd = [
+        "ffmpeg", "-y",
+        "-f", "lavfi", "-i", f"color=c=0x1A1613:s=1280x720:d={duration_sec}",
+        "-vf", f"drawtext=text='{clean_title}':fontsize=40:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2-50,"
+               f"drawtext=text='Demostracion del Sistema en Tiempo Real':fontsize=24:fontcolor=0xEA9B27:x=(w-text_w)/2:y=(h-text_h)/2+20,"
+               f"drawtext=text='Tiempo %{{pts\\:hms}}':fontsize=20:fontcolor=0xA8A29E:x=(w-text_w)/2:y=(h-text_h)/2+80",
+        "-c:v", "libx264", "-pix_fmt", "yuv420p",
+        video_path
+    ]
+    try:
+        subprocess.run(cmd, check=True, capture_output=True)
+        return True
+    except Exception as e:
+        print(f"Aviso generacion video: {e}")
+        return False
 
 ASPECT_RATIOS = {
     "16:9": (12192000, 6858000),
@@ -470,6 +505,16 @@ def build_presentation(data: dict, output_file: str, assets_dir: str):
             p_t.font.bold = True
             p_t.font.color.rgb = COLOR_TEXT_HERO
 
+            # Resolver ruta de video y configuraciones
+            video_filename = sdata.get("video_filename", "demo.mp4")
+            video_rel_path = sdata.get("video_path") or os.path.join("videos", video_filename)
+            embed_in_pptx = settings.get("embed_videos_in_pptx", True)
+            auto_create = settings.get("auto_generate_videos", False) or settings.get("create_videos", False)
+
+            if embed_in_pptx or auto_create:
+                if not os.path.exists(video_rel_path) and auto_create:
+                    auto_generate_demo_clip(video_rel_path, sdata.get("title", "Demostración de Producto"))
+
             # Layout 2 Columnas: Izquierda Video (58%), Derecha Flujo de Pasos (38%)
             if aspect_key != "9:16":
                 vw = int(content_w * 0.58)
@@ -477,30 +522,46 @@ def build_presentation(data: dict, output_file: str, assets_dir: str):
                 vx = margin_x
                 vy = int(slide_h * 0.22)
 
-                # Contenedor de Video
-                vcard = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, vx, vy, vw, vh)
-                vcard.fill.solid()
-                vcard.fill.fore_color.rgb = COLOR_BG_DARK
-                vcard.line.color.rgb = COLOR_ACCENT_TERRA
-                vcard.line.width = Pt(2)
+                video_embedded = False
+                if embed_in_pptx and os.path.exists(video_rel_path):
+                    try:
+                        os.makedirs("temp_qr", exist_ok=True)
+                        poster_path = os.path.join("temp_qr", f"poster_video_{idx}.jpg")
+                        extract_poster_frame(video_rel_path, poster_path)
+                        slide.shapes.add_movie(
+                            video_rel_path, vx, vy, vw, vh,
+                            poster_frame_image=poster_path if os.path.exists(poster_path) else None,
+                            mime_type="video/mp4"
+                        )
+                        video_embedded = True
+                    except Exception as e:
+                        print(f"Aviso incrustación de video en PPTX: {e}")
+                        video_embedded = False
 
-                vtext = slide.shapes.add_textbox(vx, vy + int(vh * 0.35), vw, int(vh * 0.3))
-                tf_v = vtext.text_frame
-                p_v = tf_v.paragraphs[0]
-                p_v.alignment = PP_ALIGN.CENTER
-                video_name = sdata.get("video_filename", "demo.mp4")
-                p_v.text = f"▶  [VIDEO: videos/{video_name}]"
-                p_v.font.name = "Calibri"
-                p_v.font.size = Pt(18)
-                p_v.font.bold = True
-                p_v.font.color.rgb = COLOR_TEXT_LIGHT
+                if not video_embedded:
+                    # Contenedor de Video estilizado fallback
+                    vcard = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, vx, vy, vw, vh)
+                    vcard.fill.solid()
+                    vcard.fill.fore_color.rgb = COLOR_BG_DARK
+                    vcard.line.color.rgb = COLOR_ACCENT_TERRA
+                    vcard.line.width = Pt(2)
 
-                p_v2 = tf_v.add_paragraph()
-                p_v2.alignment = PP_ALIGN.CENTER
-                p_v2.text = "Incruste el video desde la carpeta 'videos/' (Insertar > Multimedia > Video)"
-                p_v2.font.name = "Calibri"
-                p_v2.font.size = Pt(11)
-                p_v2.font.color.rgb = COLOR_TEXT_LIGHT_SUB
+                    vtext = slide.shapes.add_textbox(vx, vy + int(vh * 0.35), vw, int(vh * 0.3))
+                    tf_v = vtext.text_frame
+                    p_v = tf_v.paragraphs[0]
+                    p_v.alignment = PP_ALIGN.CENTER
+                    p_v.text = f"▶  [VIDEO: {video_rel_path}]"
+                    p_v.font.name = "Calibri"
+                    p_v.font.size = Pt(18)
+                    p_v.font.bold = True
+                    p_v.font.color.rgb = COLOR_TEXT_LIGHT
+
+                    p_v2 = tf_v.add_paragraph()
+                    p_v2.alignment = PP_ALIGN.CENTER
+                    p_v2.text = "Incruste el video desde la carpeta 'videos/' (Insertar > Multimedia > Video)"
+                    p_v2.font.name = "Calibri"
+                    p_v2.font.size = Pt(11)
+                    p_v2.font.color.rgb = COLOR_TEXT_LIGHT_SUB
 
                 # Columna Derecha: Flujo de 3 pasos que explica el video
                 fx = margin_x + vw + int(slide_w * 0.03)
@@ -540,11 +601,66 @@ def build_presentation(data: dict, output_file: str, assets_dir: str):
                 vh = int(slide_h * 0.45)
                 vx = margin_x
                 vy = int(slide_h * 0.22)
-                vcard = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, vx, vy, vw, vh)
-                vcard.fill.solid()
-                vcard.fill.fore_color.rgb = COLOR_BG_DARK
-                vcard.line.color.rgb = COLOR_ACCENT_TERRA
-                vcard.line.width = Pt(2)
+
+                video_embedded = False
+                if embed_in_pptx and os.path.exists(video_rel_path):
+                    try:
+                        os.makedirs("temp_qr", exist_ok=True)
+                        poster_path = os.path.join("temp_qr", f"poster_video_mob_{idx}.jpg")
+                        extract_poster_frame(video_rel_path, poster_path)
+                        slide.shapes.add_movie(
+                            video_rel_path, vx, vy, vw, vh,
+                            poster_frame_image=poster_path if os.path.exists(poster_path) else None,
+                            mime_type="video/mp4"
+                        )
+                        video_embedded = True
+                    except Exception as e:
+                        print(f"Aviso incrustación de video móvil en PPTX: {e}")
+                        video_embedded = False
+
+                if not video_embedded:
+                    vcard = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, vx, vy, vw, vh)
+                    vcard.fill.solid()
+                    vcard.fill.fore_color.rgb = COLOR_BG_DARK
+                    vcard.line.color.rgb = COLOR_ACCENT_TERRA
+                    vcard.line.width = Pt(2)
+
+                    vtext = slide.shapes.add_textbox(vx, vy + int(vh * 0.35), vw, int(vh * 0.3))
+                    tf_v = vtext.text_frame
+                    p_v = tf_v.paragraphs[0]
+                    p_v.alignment = PP_ALIGN.CENTER
+                    p_v.text = f"▶  [VIDEO: {video_rel_path}]"
+                    p_v.font.name = "Calibri"
+                    p_v.font.size = Pt(16)
+                    p_v.font.bold = True
+                    p_v.font.color.rgb = COLOR_TEXT_LIGHT
+
+                # Pasos explicativos debajo en móvil
+                flow_steps = sdata.get("flow_steps", [])
+                if flow_steps:
+                    f_card_y = vy + vh + int(slide_h * 0.02)
+                    f_avail_h = int(slide_h * 0.90) - f_card_y
+                    f_card_h = int((f_avail_h - (len(flow_steps) - 1) * int(slide_h * 0.01)) / len(flow_steps))
+                    for f_idx, f_step in enumerate(flow_steps):
+                        sy = f_card_y + f_idx * (f_card_h + int(slide_h * 0.01))
+                        f_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, margin_x, sy, content_w, f_card_h)
+                        f_card.fill.solid()
+                        f_card.fill.fore_color.rgb = COLOR_CARD_BG
+                        f_card.line.color.rgb = COLOR_CARD_BORDER
+                        f_card.line.width = Pt(1)
+                        ftf = f_card.text_frame
+                        ftf.word_wrap = True
+                        fp1 = ftf.paragraphs[0]
+                        fp1.text = f_step.get("step", f"Paso {f_idx+1}")
+                        fp1.font.name = "Calibri"
+                        fp1.font.size = Pt(11)
+                        fp1.font.bold = True
+                        fp1.font.color.rgb = COLOR_ACCENT_TERRA
+                        fp2 = ftf.add_paragraph()
+                        fp2.text = f_step.get("desc", "")
+                        fp2.font.name = "Calibri"
+                        fp2.font.size = Pt(9.5)
+                        fp2.font.color.rgb = COLOR_TEXT_BODY
 
         # -------------------------------------------------------------
         # 6. COMPARATIVA O ARQUITECTURA (SPLIT_COMPARISON)

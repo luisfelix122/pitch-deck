@@ -6,7 +6,7 @@ description: End-to-end generator of winning pitches, non-repetitive visual slid
 # Pitch-Deck: Sistema Integral de Pitch, Diapositivas Visuales y Videos
 
 Esta skill unificada guía al usuario a través de una **entrevista interactiva paso a paso**, evitando plantillas monótonas o repetitivas, y genera tres herramientas coordinadas:
-1. **La Presentación en PowerPoint (`.pptx`)**: Con layouts variados (pipelines de flujo, comparativas de 2 columnas, tarjetas de métricas gigantes, video con flujo lateral paso a paso, y cierre con QR).
+1. **La Presentación en PowerPoint (`.pptx`)**: Con videos incrustados directamente listos para reproducir al abrir la lámina, layouts variados (pipelines de flujo, comparativas de 2 columnas, tarjetas de métricas gigantes, video con flujo lateral paso a paso, y cierre con QR).
 2. **Los Videos de Demostración (`videos/`)**: Recortados, retemporizados y ajustados en velocidad con `scripts/video_tools.py` (FFmpeg) o generados con `heygen-com/hyperframes`.
 3. **El Simulador de Ensayo HTML (`.html`)**: Con el **guion a la izquierda** y las **diapositivas a la derecha**, botón **"⛶ Agrandar Diapos"** para pantalla completa, cronómetro y acotaciones escénicas (virtual o presencial).
 
@@ -58,12 +58,13 @@ En la parte inferior de las diapositivas habrá una barra segmentada donde una m
 > *(a) ¿Tienes una imagen o logo en la carpeta (o en un doc/chat)? Indícame la ruta o pásamela para procesarla con Python, quitarle el fondo blanco y dejarla con transparencia.*
 > *(b) O descríbeme qué personaje, figura o símbolo representativo de tu proyecto te gustaría que usemos."*
 
-### Pregunta 8: Videos, Recorte y Flujo al Costado
-> *"Respecto a los videos de demostración:*
-> *1. ¿De dónde provendrán los videos? (¿Tienes grabaciones locales en la carpeta para recortarlas, deseas que ajustemos la velocidad con FFmpeg al tiempo del pitch, o prefieres generarlos con herramientas como HyperFrames?)*
-> *2. En la diapositiva, colocaremos el video al lado izquierdo y al costado derecho un **diagrama de flujo en 3 pasos** que explica lo que hace la app en ese momento. ¿Cuáles son esos 3 pasos clave de la demo?*
-> *3. ¿Cuántos videos incluirás (1, 2 o más)?"*
-- La skill procesa y guarda los clips en `videos/<nombre>.mp4` y diseña la diapositiva `video_with_flow` con el reproductor y el flujo secuencial en paralelo.
+### Pregunta 8: Videos de Demostración (Creación, Incrustación en PPTX y Flujo Lateral)
+Para los videos de la presentación, la skill realizará tres preguntas clave:
+> 1. *"¿Deseas incluir videos o demostraciones en movimiento dentro de la presentación?"*
+> 2. *(Si la respuesta es sí)*: *"¿Ya tienes grabaciones o archivos de video listos en tu carpeta, o prefieres que la skill los cree/genere automáticamente (usando herramientas como HyperFrames o clips de prueba con FFmpeg ajustados a la velocidad del pitch)?"*
+> 3. *"¿Deseas que la skill incruste el video directamente dentro de la diapositiva de PowerPoint (.pptx) final para que esté listo al abrirlo, o prefieres que quede enlazado desde la carpeta `videos/`?"*
+> 4. *"Al costado del video colocaremos un **diagrama de flujo de 3 pasos** que explica lo que ocurre en pantalla en tiempo real. ¿Cuáles son esos 3 pasos clave de la demostración?"*
+- **Generación e Incrustación Automática en PPTX**: Si el usuario elige que la skill cree e incruste el video, la herramienta genera el clip en `videos/<nombre>.mp4`, extrae automáticamente el fotograma de portada (*poster frame*) con FFmpeg e incrusta el reproductor directamente en la diapositiva PPTX utilizando `slide.shapes.add_movie()`. En caso de que elija no incrustarlo en el PPTX, genera un contenedor estilizado con instrucciones claras para enlazarlo desde la carpeta `videos/`.
 
 ### Pregunta 9: Código QR en la Lámina Final (Personalizable)
 > *"¿Deseas incluir código QR en la diapositiva final de cierre? Si es así, ¿qué contenido o acción quieres que codifique? (Puede ser un link web/demo, mensaje directo de WhatsApp, vCard de contacto, credenciales Wi-Fi o un texto libre; o dime si prefieres sin QR)"*.
