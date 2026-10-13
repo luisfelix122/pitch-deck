@@ -1,54 +1,45 @@
-# Guía de Inserción y Optimización de Videos en PowerPoint
+# Guía de Inserción y Gestión Segura de Videos en PowerPoint
 
-Esta guía detalla cómo integrar videos de demostración (demos técnicas, prototipos de software, testimonios) dentro de las diapositivas generadas con la skill **Chasqui-Slides**.
+Esta guía detalla cómo integrar videos de demostración (demos de producto, prototipos, recorridos de interfaz) de manera segura y confiable para que la presentación nunca falle durante el pitch en vivo.
 
 ---
 
-## 1. Dónde colocar los videos
+## 1. Reglas de Seguridad para Videos en Presentaciones en Vivo
 
-Cuando el generador crea diapositivas con contenedor de video, reserva el marco central exacto:
-- Guarda tus archivos de video en la carpeta `assets/videos/` de tu proyecto.
-- Formato recomendado: **`.mp4` (Códec de video H.264, audio AAC)**.
-- Resolución óptima: **1080p (1920x1080)** a 30 o 60 fps.
+Presentar en vivo con videos tiene riesgos típicos que se resuelven con estas precauciones:
+
+1. **Videos 100% Locales (Cero Dependencia de Internet)**:
+   - Nunca confíes en conexiones Wi-Fi del evento para reproducir videos desde YouTube o la nube.
+   - Guarda los archivos directamente en la carpeta `videos/` dentro del proyecto.
+2. **Formato Universal Confiable**:
+   - Usa exclusivamente formato **`.mp4` (Códec de video H.264, audio AAC)**. Es el formato que PowerPoint reproduce sin exigir códecs externos en cualquier computadora.
+3. **Control del Audio**:
+   - Si vas a hablar encima del video mientras corre: Configura el volumen en **Silenciar** en PowerPoint para que tu voz con el micrófono sea la única protagonista.
+4. **Respaldos Visuales**:
+   - Cada diapositiva de video generada incluye un **diagrama de flujo paso a paso al costado**. Si por cualquier imprevisto técnico el video no reproduce, el flujo lateral te permite explicar la demo con total claridad sin perder el ritmo.
 
 ---
 
 ## 2. Inserción en PowerPoint (Paso a Paso)
 
-1. Abre el archivo `.pptx` generado en PowerPoint.
-2. Ve a la diapositiva marcada con **`[CONTENEDOR DE VIDEO]`**.
-3. En la barra superior, haz clic en **Insertar** > **Multimedia** > **Video** > **Este dispositivo...**.
-4. Selecciona tu archivo `.mp4`.
-5. Arrastra el video para que calce exactamente sobre el marco gris diseñado en la diapositiva.
+1. Abre tu archivo `.pptx`.
+2. Ve a la diapositiva marcada con **`[VIDEO: videos/nombre.mp4]`**.
+3. Haz clic en **Insertar** > **Multimedia** > **Video** > **Este dispositivo...**.
+4. Selecciona tu archivo desde la carpeta `videos/`.
+5. Ajusta el tamaño al contenedor diseñado en la lámina.
 
 ---
 
-## 3. Configuración de Reproducción Profesional
+## 3. Configuración de Reproducción
 
-Con el video seleccionado, ve a la pestaña **Reproducción (Playback)** en PowerPoint:
-
-- **Inicio**:
-  - Si es una demo que debes explicar mientras corre: Elige **Automáticamente**.
-  - Si vas a hablar antes de mostrarlo: Elige **Al hacer clic en él**.
-- **Volumen**: Si el video tiene música de fondo alta, ajústalo en **Bajo** o **Silenciar** para que tu voz con el micrófono no compita.
-- **Loop**: Si es un video corto de 5-10 segundos mostrando una interfaz en acción, marca **Repetir la reproducción hasta su interrupción**.
+Con el video seleccionado en PowerPoint:
+- **Pestaña Reproducción**:
+  - **Iniciar**: Selecciona **Automáticamente** si deseas que arranque al pasar a esa diapositiva, o **Al hacer clic** si prefieres introducirlo antes.
+  - Marca **Repetir la reproducción hasta su interrupción** si es un loop corto de interfaz de 5 a 10 segundos.
 
 ---
 
-## 4. Recorte de Video dentro de PowerPoint
-
-Si tu grabación de pantalla tiene segundos muertos al inicio o al final:
-1. En la pestaña **Reproducción**, haz clic en **Recortar video**.
-2. Mueve el marcador verde al segundo exacto donde comienza la acción.
-3. Mueve el marcador rojo donde termina la demostración.
-4. Haz clic en **Aceptar**. PowerPoint guarda el recorte sin necesidad de editores externos.
-
----
-
-## 5. Recorte Previo con FFmpeg (Opcional por CLI)
-
-Si deseas recortar tu video antes de insertarlo en la presentación:
-```bash
-# Recortar desde el segundo 5 hasta el segundo 25 sin pérdida de calidad:
-ffmpeg -i input_video.mp4 -ss 00:00:05 -to 00:00:25 -c copy assets/videos/demo_recortada.mp4
-```
+## 4. Recorte Rápido sin Programas Externos
+1. En PowerPoint, ve a **Reproducción** > **Recortar video**.
+2. Mueve los marcadores de inicio y fin para quedarte solo con la parte esencial del producto.
+3. Haz clic en **Aceptar**.

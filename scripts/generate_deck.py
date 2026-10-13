@@ -165,7 +165,7 @@ def build_presentation(data: dict, output_file: str, assets_dir: str):
     if not os.path.exists(fii_logo):
         fii_logo = os.path.join(assets_dir, "logos", "fii_logo.png")
 
-    runner_logo = os.path.join(assets_dir, "logos", "chasqui_runner.png")
+    runner_logo = os.path.join(assets_dir, "logos", "runner_indicator.png")
     custom_avatar = settings.get("custom_avatar_path")
     if custom_avatar and os.path.exists(custom_avatar):
         processed_path = os.path.join(assets_dir, "logos", "processed_avatar.png")
@@ -701,7 +701,7 @@ def build_presentation(data: dict, output_file: str, assets_dir: str):
             if qr_cfg.get("enabled", True):
                 os.makedirs("temp_qr", exist_ok=True)
                 primary = qr_cfg.get("primary", {})
-                qr_content = primary.get("payload") or primary.get("url") or "https://chasqui.chat"
+                qr_content = primary.get("payload") or primary.get("url") or "https://tu-proyecto.pe"
                 qr_img = generate_qr_image(qr_content, "temp_qr/qr_primary.png")
 
                 qr_card_w = int(slide_w * 0.20) if aspect_key != "9:16" else int(slide_w * 0.35)

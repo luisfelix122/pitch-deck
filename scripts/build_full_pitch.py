@@ -50,7 +50,7 @@ def generate_html_deliverable(data: dict, template_path: str, output_path: str, 
     # Avatar path (relativo al HTML o data URI si es local)
     avatar_path = settings.get("custom_avatar_path")
     if not avatar_path or not os.path.exists(avatar_path):
-        avatar_path = os.path.join(assets_dir, "logos", "chasqui_runner.png")
+        avatar_path = os.path.join(assets_dir, "logos", "runner_indicator.png")
     # Convertir a ruta relativa limpia
     rel_avatar = os.path.relpath(avatar_path, os.path.dirname(output_path) if os.path.dirname(output_path) else ".").replace("\\", "/")
     html = html.replace("{{AVATAR_PATH}}", rel_avatar)

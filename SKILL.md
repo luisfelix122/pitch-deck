@@ -107,7 +107,7 @@ La skill incluye `scripts/video_tools.py` potenciado por FFmpeg:
 python scripts/video_tools.py --input video_crudo.mp4 --output videos/demo.mp4 --start 5 --end 35 --target-duration 15
 
 # Generar clip sintético de prueba si no hay video grabado:
-python scripts/video_tools.py --create-demo --title "CHASQUI AI EN VIVO" --target-duration 15 --output videos/demo.mp4
+python scripts/video_tools.py --create-demo --title "DEMO DEL SISTEMA EN VIVO" --target-duration 15 --output videos/demo.mp4
 ```
 
 ### Integración con HyperFrames (Generación de Videos IA)

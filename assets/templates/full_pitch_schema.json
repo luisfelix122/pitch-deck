@@ -1,14 +1,14 @@
 {
   "meta": {
-    "title": "Chasqui AI: Anatomía de un Agente",
-    "subtitle": "De un mensaje de WhatsApp a una respuesta con fundamento",
-    "author": "Luis Gonzales",
-    "event": "Hackathon Regional Piura Innova",
+    "title": "DataSafe: Seguridad y Automatización Operativa",
+    "subtitle": "Protección de datos y automatización confiable para operaciones críticas",
+    "author": "Equipo de Innovación",
+    "event": "Hackathon de Innovación y Ciberseguridad",
     "allocated_time_minutes": 3.0,
     "communicator_style": "Cercano",
-    "contact_email": "contacto@chasqui.chat",
-    "contact_web": "chasqui.chat",
-    "contact_github": "github.com/chasqui-stack"
+    "contact_email": "contacto@datasafe.pe",
+    "contact_web": "datasafe.pe",
+    "contact_github": "github.com/datasafe-org"
   },
   "settings": {
     "aspect_ratio": "16:9",
@@ -19,9 +19,9 @@
     "qr_config": {
       "enabled": true,
       "primary": {
-        "payload": "https://chasqui.chat",
-        "label": "chasqui.chat",
-        "description": "Prueba el agente en vivo"
+        "payload": "https://datasafe.pe",
+        "label": "Demo de Seguridad",
+        "description": "Escanea para probar en vivo"
       }
     }
   },
@@ -29,11 +29,11 @@
     {
       "type": "hero_dark",
       "category": "PORTADA",
-      "title": "Anatomía de un Agente Conversacional",
-      "subtitle": "De un mensaje de WhatsApp a una respuesta con fundamento",
-      "author_line": "Luis Gonzales · Piura AI · Hackathon Regional",
-      "highlight": "Arquitectura modular para pasar de una demo de una tarde a un sistema robusto en producción.",
-      "speech": "Buenos días. La mayoría de proyectos de IA celebran cuando logran una demo en una tarde. Pero en producción, el 90% colapsa por falta de arquitectura y memoria.",
+      "title": "Seguridad y Automatización Operativa en Tiempo Real",
+      "subtitle": "Protección de datos y automatización confiable para operaciones críticas",
+      "author_line": "Equipo de Innovación · UNP · Hackathon Regional",
+      "highlight": "Arquitectura con cifrado punto a punto, tolerancia a fallas y cumplimiento estricto de privacidad.",
+      "speech": "Buenos días. En un mundo donde el 80% de brechas de seguridad ocurren por descuidos operativos, proteger los datos críticos de una institución no es un lujo; es una necesidad urgente.",
       "tone": "Urgencia contenida y seguridad",
       "gaze": "Contacto visual directo con los jueces",
       "hands": "Manos abiertas a la altura del pecho"
@@ -41,36 +41,36 @@
     {
       "type": "split_comparison",
       "category": "EL PROBLEMA",
-      "title": "La Demo vs. La Realidad Operativa",
-      "left_title": "❌ EL DOLOR ACTUAL",
+      "title": "Vulnerabilidad Actual vs. Arquitectura Blindada",
+      "left_title": "❌ EL RIESGO ACTUAL",
       "left_points": [
-        "Bots aislados que olvidan el contexto en cada turno.",
-        "Alucinaciones críticas sin fundamento documental.",
-        "Respuestas tardías que frustran a usuarios de Piura."
+        "Sistemas dispersos sin políticas unificadas de cifrado.",
+        "Fugas de información sensible por canales informales.",
+        "Pérdidas económicas y sanciones por incumplimiento."
       ],
       "right_title": "✅ NUESTRA SOLUCIÓN",
       "right_points": [
-        "Contrato canónico que unifica WhatsApp, Web y Telegram.",
-        "RAG estricto: responde con evidencia o dice 'no lo sé'.",
-        "Trazabilidad de cada decisión con observabilidad total."
+        "Cifrado AES-256 de extremo a extremo en cada transacción.",
+        "Validación biométrica y control de acceso por roles.",
+        "Trazabilidad inmutable con auditoría en tiempo real."
       ],
-      "bridge": "No necesitábamos otro bot genérico; necesitábamos un agente con memoria y herramientas reales de negocio.",
-      "speech": "Aquí está el quiebre: un bot desconectado destruye la confianza del cliente. Con Chasqui unificamos todos los canales en un único contrato canónico.",
+      "bridge": "La seguridad no puede ser un freno para la operación; debe ser el motor que genera confianza absoluta en cada usuario.",
+      "speech": "El riesgo actual es demoledor: fugas de datos y sistemas colapsados. Con DataSafe blindamos cada canal con validación criptográfica sin ralentizar la operación.",
       "tone": "Contraste dramático y convicción",
       "gaze": "Pasear la mirada por toda la mesa",
       "hands": "Marcar contraste físico con las manos izquierda y derecha"
     },
     {
       "type": "flow_pipeline",
-      "category": "ARQUITECTURA",
-      "title": "El Camino de un Mensaje: De Entrada a Respuesta",
+      "category": "ARQUITECTURA DE SEGURIDAD",
+      "title": "El Camino Seguro de una Transacción",
       "steps": [
-        {"title": "1. Ingesta", "desc": "Canal WhatsApp recibe y normaliza el mensaje."},
-        {"title": "2. Memoria", "desc": "Recupera historial y contexto de sesión."},
-        {"title": "3. Agente & Tools", "desc": "El LLM razona y consulta la base de datos."},
-        {"title": "4. Respuesta", "desc": "Envío con fundamento verificado en <1.2s."}
+        {"title": "1. Autenticación", "desc": "Validación multifactor y firma digital en origen."},
+        {"title": "2. Túnel Cifrado", "desc": "Tránsito blindado con protocolo TLS 1.3."},
+        {"title": "3. Verificación", "desc": "Inspección inteligente de integridad y anomalías."},
+        {"title": "4. Ejecución", "desc": "Registro auditable y respuesta segura en <1.2s."}
       ],
-      "speech": "Observen el flujo: cuando un agricultor o comerciante escribe, el mensaje se normaliza, la memoria recupera el contexto, el agente consulta la base de datos y entrega una respuesta certera.",
+      "speech": "Observen el flujo: cada mensaje o solicitud se autentica en origen, viaja por un túnel blindado, verifica su integridad y se ejecuta con trazabilidad total.",
       "tone": "Claridad pedagógica y ritmo ágil",
       "gaze": "Mirar a la mesa técnica del jurado",
       "hands": "Marcar los 4 pasos secuenciales con los dedos"
@@ -78,43 +78,43 @@
     {
       "type": "video_with_flow",
       "category": "DEMOSTRACIÓN EN VIVO",
-      "title": "Prototipo en Operación Real",
-      "video_filename": "demo_prototipo.mp4",
+      "title": "Detección y Bloqueo de Amenazas en Acción",
+      "video_filename": "demo_seguridad.mp4",
       "flow_steps": [
-        {"step": "Paso 1: Solicitud", "desc": "El usuario pregunta por disponibilidad de inventario."},
-        {"step": "Paso 2: Ejecución", "desc": "El agente corre una Tool SQL y valida stock en tiempo real."},
-        {"step": "Paso 3: Confirmación", "desc": "Genera el enlace de pago y guarda la orden."}
+        {"step": "Paso 1: Solicitud", "desc": "Un usuario intenta acceder a registros protegidos."},
+        {"step": "Paso 2: Validación", "desc": "El motor analiza tokens y detecta permisos en tiempo real."},
+        {"step": "Paso 3: Respuesta", "desc": "Concede acceso seguro o aísla intentos sospechosos."}
       ],
-      "speech": "Veámoslo en vivo en este clip de 15 segundos: a la izquierda ven la pantalla del usuario en WhatsApp y a la derecha el flujo exacto de ejecución en milisegundos.",
+      "speech": "Veámoslo en esta demostración de 15 segundos: a la izquierda observan la interfaz del operador y a la derecha el flujo de validación automática en milisegundos.",
       "tone": "Orgullo tecnológico y dinamismo",
-      "gaze": "Girar hacia el video y volver a conectar con el jurado",
+      "gaze": "Girar hacia la pantalla y volver a conectar con el jurado",
       "hands": "Señalar la pantalla y luego abrir brazos hacia los jueces"
     },
     {
       "type": "metric_kpis",
-      "category": "VALIDACIÓN Y MÉTRICAS",
-      "title": "Tracción Empírica y Eficiencia Comprobada",
+      "category": "VALIDACIÓN Y RESILIENCIA",
+      "title": "Métricas de Confiabilidad y Cumplimiento",
       "kpis": [
-        {"number": "94.2%", "label": "Precisión Algorítmica", "desc": "Evaluado en más de 500 diálogos reales de prueba."},
-        {"number": "<1.2s", "label": "Latencia Promedio", "desc": "Tiempo de extremo a extremo en conexiones móviles 4G."},
-        {"number": "100%", "label": "Trazabilidad", "desc": "Cada turno auditado con Human-In-The-Loop disponible."}
+        {"number": "99.99%", "label": "Disponibilidad", "desc": "Tolerancia a fallas con redundancia activa."},
+        {"number": "0 Fugas", "label": "Integridad de Datos", "desc": "Cero incidentes en más de 10,000 pruebas de estrés."},
+        {"number": "<1.2s", "label": "Tiempo de Respuesta", "desc": "Validación ultrarrápida sin fricción de usuario."}
       ],
-      "speech": "Los números no mienten: alcanzamos un 94.2% de precisión en respuestas técnicas con una latencia inferior a 1.2 segundos, asegurando trazabilidad absoluta.",
+      "speech": "Los números demuestran la solidez de la plataforma: 99.99% de disponibilidad operativa y respuesta en menos de 1.2 segundos sin una sola brecha de seguridad.",
       "tone": "Firmeza y autoridad numérica",
-      "gaze": "Clavar la mirada en el jurado evaluador de métricas",
-      "hands": "Pausa deliberada de 1.5s tras cada número"
+      "gaze": "Clavar la mirada en el jurado evaluador",
+      "hands": "Pausa deliberada de 1.5s tras cada cifra"
     },
     {
       "type": "closing_qr_dark",
       "category": "CIERRE",
       "title": "¡Muchas Gracias!",
-      "subtitle": "Prueben el agente ahora mismo escaneando el código QR.",
+      "subtitle": "La seguridad no se improvisa; se construye con arquitectura sólida.",
       "contact_lines": [
-        "chasqui.chat",
-        "github.com/chasqui-stack",
-        "contacto@unp.edu.pe"
+        "datasafe.pe",
+        "github.com/datasafe-org",
+        "contacto@datasafe.pe"
       ],
-      "speech": "El futuro de la atención inteligente en nuestra región no es promesas; es tecnología en funcionamiento. Escaneen el código y compruébenlo ustedes mismos. Muchas gracias.",
+      "speech": "La confianza de las personas y de las instituciones se gana con hechos y con tecnología probada. Escaneen el código y comprueben la plataforma ustedes mismos. Muchas gracias.",
       "tone": "Cierre rotundo y pasión",
       "gaze": "Sostener la mirada con los jueces durante 2 segundos de silencio final",
       "hands": "Postura erguida y pecho abierto"

@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+temp_qr/
+videos/
+test_*.pptx
+test_*.html
