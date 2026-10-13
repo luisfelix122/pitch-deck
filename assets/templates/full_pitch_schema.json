@@ -1,84 +1,123 @@
 {
   "meta": {
-    "title": "Nombre del Proyecto",
-    "subtitle": "One-liner claro y contundente",
-    "author": "Nombre del Expositor / Equipo",
-    "event": "Hackathon / Competencia",
+    "title": "Chasqui AI: Anatomía de un Agente",
+    "subtitle": "De un mensaje de WhatsApp a una respuesta con fundamento",
+    "author": "Luis Gonzales",
+    "event": "Hackathon Regional Piura Innova",
     "allocated_time_minutes": 3.0,
     "communicator_style": "Cercano",
-    "contact_email": "contacto@proyecto.pe",
-    "contact_web": "proyecto.pe",
-    "contact_github": "github.com/equipo"
+    "contact_email": "contacto@chasqui.chat",
+    "contact_web": "chasqui.chat",
+    "contact_github": "github.com/chasqui-stack"
   },
   "settings": {
     "aspect_ratio": "16:9",
+    "presentation_mode": "Presencial",
     "include_unp_logo": true,
     "include_fii_logo": true,
     "custom_avatar_path": null,
     "qr_config": {
       "enabled": true,
       "primary": {
-        "payload": "https://proyecto.pe",
-        "label": "Demo en Vivo",
-        "description": "Escanea para probar"
+        "payload": "https://chasqui.chat",
+        "label": "chasqui.chat",
+        "description": "Prueba el agente en vivo"
       }
     }
-  },
-  "speech": {
-    "act1_opening": "Texto de apertura con gancho...",
-    "act1_bridge": "El puente que conecta el gancho con el dolor real...",
-    "act1_problem": "Cuantificación del dolor en el territorio...",
-    "act2_solution": "Presentación del producto, tecnología y validación empírica...",
-    "act3_closing": "Llamado a la acción, frase final esculpida y silencio de 2 segundos."
   },
   "slides": [
     {
       "type": "hero_dark",
-      "title": "Nombre del Proyecto",
-      "subtitle": "Propuesta de valor en una oración",
-      "author_line": "Expositor · UNP · Hackathon"
+      "category": "PORTADA",
+      "title": "Anatomía de un Agente Conversacional",
+      "subtitle": "De un mensaje de WhatsApp a una respuesta con fundamento",
+      "author_line": "Luis Gonzales · Piura AI · Hackathon Regional",
+      "highlight": "Arquitectura modular para pasar de una demo de una tarde a un sistema robusto en producción.",
+      "speech": "Buenos días. La mayoría de proyectos de IA celebran cuando logran una demo en una tarde. Pero en producción, el 90% colapsa por falta de arquitectura y memoria.",
+      "tone": "Urgencia contenida y seguridad",
+      "gaze": "Contacto visual directo con los jueces",
+      "hands": "Manos abiertas a la altura del pecho"
     },
     {
-      "type": "content_light",
+      "type": "split_comparison",
       "category": "EL PROBLEMA",
-      "title": "El dolor crítico no resuelto",
-      "points": [
-        "Punto crítico número 1 con datos concretos.",
-        "Pérdidas económicas o impacto directo en personas.",
-        "Ineficiencia de las alternativas actuales."
-      ]
+      "title": "La Demo vs. La Realidad Operativa",
+      "left_title": "❌ EL DOLOR ACTUAL",
+      "left_points": [
+        "Bots aislados que olvidan el contexto en cada turno.",
+        "Alucinaciones críticas sin fundamento documental.",
+        "Respuestas tardías que frustran a usuarios de Piura."
+      ],
+      "right_title": "✅ NUESTRA SOLUCIÓN",
+      "right_points": [
+        "Contrato canónico que unifica WhatsApp, Web y Telegram.",
+        "RAG estricto: responde con evidencia o dice 'no lo sé'.",
+        "Trazabilidad de cada decisión con observabilidad total."
+      ],
+      "bridge": "No necesitábamos otro bot genérico; necesitábamos un agente con memoria y herramientas reales de negocio.",
+      "speech": "Aquí está el quiebre: un bot desconectado destruye la confianza del cliente. Con Chasqui unificamos todos los canales en un único contrato canónico.",
+      "tone": "Contraste dramático y convicción",
+      "gaze": "Pasear la mirada por toda la mesa",
+      "hands": "Marcar contraste físico con las manos izquierda y derecha"
     },
     {
-      "type": "act_divider_dark",
-      "act_number": "ACTO 2",
-      "title": "Nuestra Solución",
-      "description": "Tecnología diseñada para resolver el problema de raíz."
+      "type": "flow_pipeline",
+      "category": "ARQUITECTURA",
+      "title": "El Camino de un Mensaje: De Entrada a Respuesta",
+      "steps": [
+        {"title": "1. Ingesta", "desc": "Canal WhatsApp recibe y normaliza el mensaje."},
+        {"title": "2. Memoria", "desc": "Recupera historial y contexto de sesión."},
+        {"title": "3. Agente & Tools", "desc": "El LLM razona y consulta la base de datos."},
+        {"title": "4. Respuesta", "desc": "Envío con fundamento verificado en <1.2s."}
+      ],
+      "speech": "Observen el flujo: cuando un agricultor o comerciante escribe, el mensaje se normaliza, la memoria recupera el contexto, el agente consulta la base de datos y entrega una respuesta certera.",
+      "tone": "Claridad pedagógica y ritmo ágil",
+      "gaze": "Mirar a la mesa técnica del jurado",
+      "hands": "Marcar los 4 pasos secuenciales con los dedos"
     },
     {
-      "type": "content_light",
-      "category": "INNOVACIÓN",
-      "title": "Cómo funciona el sistema",
-      "points": [
-        "Componente central y arquitectura.",
-        "Validación empírica con usuarios reales.",
-        "Modelo de negocio sostenible."
-      ]
+      "type": "video_with_flow",
+      "category": "DEMOSTRACIÓN EN VIVO",
+      "title": "Prototipo en Operación Real",
+      "video_filename": "demo_prototipo.mp4",
+      "flow_steps": [
+        {"step": "Paso 1: Solicitud", "desc": "El usuario pregunta por disponibilidad de inventario."},
+        {"step": "Paso 2: Ejecución", "desc": "El agente corre una Tool SQL y valida stock en tiempo real."},
+        {"step": "Paso 3: Confirmación", "desc": "Genera el enlace de pago y guarda la orden."}
+      ],
+      "speech": "Veámoslo en vivo en este clip de 15 segundos: a la izquierda ven la pantalla del usuario en WhatsApp y a la derecha el flujo exacto de ejecución en milisegundos.",
+      "tone": "Orgullo tecnológico y dinamismo",
+      "gaze": "Girar hacia el video y volver a conectar con el jurado",
+      "hands": "Señalar la pantalla y luego abrir brazos hacia los jueces"
     },
     {
-      "type": "video_slide",
-      "category": "DEMO EN VIVO",
-      "title": "Demostración de Funcionamiento",
-      "video_filename": "demo_prototipo.mp4"
+      "type": "metric_kpis",
+      "category": "VALIDACIÓN Y MÉTRICAS",
+      "title": "Tracción Empírica y Eficiencia Comprobada",
+      "kpis": [
+        {"number": "94.2%", "label": "Precisión Algorítmica", "desc": "Evaluado en más de 500 diálogos reales de prueba."},
+        {"number": "<1.2s", "label": "Latencia Promedio", "desc": "Tiempo de extremo a extremo en conexiones móviles 4G."},
+        {"number": "100%", "label": "Trazabilidad", "desc": "Cada turno auditado con Human-In-The-Loop disponible."}
+      ],
+      "speech": "Los números no mienten: alcanzamos un 94.2% de precisión en respuestas técnicas con una latencia inferior a 1.2 segundos, asegurando trazabilidad absoluta.",
+      "tone": "Firmeza y autoridad numérica",
+      "gaze": "Clavar la mirada en el jurado evaluador de métricas",
+      "hands": "Pausa deliberada de 1.5s tras cada número"
     },
     {
       "type": "closing_qr_dark",
+      "category": "CIERRE",
       "title": "¡Muchas Gracias!",
-      "subtitle": "El futuro de la innovación empieza hoy.",
+      "subtitle": "Prueben el agente ahora mismo escaneando el código QR.",
       "contact_lines": [
-        "proyecto.pe",
-        "github.com/equipo",
-        "contacto@proyecto.pe"
-      ]
+        "chasqui.chat",
+        "github.com/chasqui-stack",
+        "contacto@unp.edu.pe"
+      ],
+      "speech": "El futuro de la atención inteligente en nuestra región no es promesas; es tecnología en funcionamiento. Escaneen el código y compruébenlo ustedes mismos. Muchas gracias.",
+      "tone": "Cierre rotundo y pasión",
+      "gaze": "Sostener la mirada con los jueces durante 2 segundos de silencio final",
+      "hands": "Postura erguida y pecho abierto"
     }
   ]
 }
